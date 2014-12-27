@@ -1,0 +1,3 @@
+DefaultType text/html
+DirectoryIndex home
+Redirect 301 woff http://benjamincook.ca/
