@@ -4,8 +4,9 @@ I greatly enjoy writing. Translating thoughts into language verges on magic to m
 
 Presently available:
 
- * A [compilation of links regarding #GamerGate.](gamergate)
- * A [General ethical guidelines for my writing.](ethics)
+* [A compilation of links regarding #GamerGate.](gamergate)
+* [General ethical guidelines for my writing.](ethics)
+* [A minimalist web log.](weblog)
 
 
 
