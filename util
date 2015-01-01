@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+filedate(){
+	TZ=America/Vancouver date -d "`stat -c %z $1`" "+%A, %B %d, %Y at %I:%M %p"
+}
+filedatepoch(){
+	TZ=America/Vancouver date -d "`stat -c %z $1`" "+%s"
+}
+import(){
+	JPEG="jpe?g$"
+	echo "Importing $1..."
+	if [[ $1 =~ $JPEG ]] ; then
+		mv "$1" /srv/http/benjamincook.ca/site/blog/`./datepoch.sh "$1"`.jpeg
+	fi
+	./regen.sh
+}
+regen(){
+	#!/usr/bin/env bash
+	SDIR=site
+	BDIR=blog
+	WDIR=/$BDIR
+	FDIR=$SDIR/$BDIR
+	JPEG=".jpeg$"
+	MD="weblog.md"
+	ls -ct1 $FDIR >cat
+	echo "# Web Log" >$MD
+	while read fn ; do
+		date=`./date.sh "$FDIR/$fn"`
+		echo "## $date "
+		if [[ "$fn" =~ $JPEG ]] ; then
+			echo "![$date]($WDIR/$fn)"
+		fi
+	done <cat >>$MD
+	rm cat
+	make
+}
+wget --post-data 'url=http://8chan.co/cuteboys' https://archive.today/submit/ -O test

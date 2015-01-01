@@ -1,0 +1,53 @@
+@font-face {
+  font-family: garamond;
+  font-style: normal;
+  font-weight: 400;
+  src: local('garamond'), url(/woff/garamond) format('woff');
+}
+@font-face {
+  font-family: concourse;
+  font-style: normal;
+  font-weight: 400;
+  src: local('concourse'), url(/woff/concourse) format('woff');
+}
+@font-face {
+  font-family: consolas;
+  font-style: normal;
+  font-weight: 400;
+  src: local('consolas'), url(/woff/consolas) format('woff');
+}
+
+* { 
+	margin: 0;
+	padding: 0; 
+	border: 0;
+	color: black; 
+	background: white;
+	text-align: justify;
+	font-family: concourse, sans-serif;
+}
+html{
+	display:block;
+	height: 100%;
+	font-size:18pt;
+}
+body {
+	margin-left:50px;
+	width: 30em;
+	padding-bottom:20px;
+}
+
+h1,h2,h3{ font-family:garamond,serif; }
+code{ font-family:consolas; font-size:14pt; }
+
+html { background: black; }
+
+h1 { padding: 0.2em 0; text-align: center; }
+h2,h3 { margin: 0.5em 1em; }
+p,ul { margin: 0.5em; }
+ul,pre { margin-left: 2em; }
+li{ margin-bottom: 5px; }
+
+h1{ border-bottom:3px solid black }
+
+img{ display:block; max-width: 100%; margin:0 auto; }
