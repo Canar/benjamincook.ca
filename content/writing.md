@@ -7,6 +7,7 @@ Presently available:
 * [A compilation of links regarding #GamerGate.](gamergate)
 * [General ethical guidelines for my writing.](ethics)
 * [A minimalist web log.](weblog)
+* [A collection of research.](research)
 
 
 
