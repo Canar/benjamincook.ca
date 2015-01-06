@@ -10,7 +10,7 @@ Edit the `Makefile` to change the behaviour.
 
 Coming soon: 
 
-* Picture uploading/autoblogging.
-* Text uploading/autoblogging.
+* Picture uploading/autoblogging. (Partially implemented.)
+* Text uploading/autoblogging. (Partially implemented.)
 * GeoIP and log-file parsing.
-* Insanity
+* Insanity (Core feature since release date, monotonically increasing.)
