@@ -56,8 +56,8 @@ oldbuild(){
 	rm head title _content
 }
 title(){
-	if grep "^#[[:space:]]" $1 ; then
-		grep "^#[[:space:]]" $1 | head -1 | sed 's/^#[[:space:]]//g'
+	if grep "^#[[:space:]]" $1 >/dev/null ; then
+		grep -E "^#[[:space:]]" $1 | head -1 | sed -r 's/^#[[:space:]]//g'
 	else
 		blogdate "$SITEPATH/$1"
 	fi
