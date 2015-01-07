@@ -1,36 +1,79 @@
 #!/usr/bin/env bash
-filedate(){
-	TZ=America/Vancouver date -d "`stat -c %z $1`" "+%A, %B %d, %Y at %I:%M %p"
+STATCMD='stat -c %y'
+
+BLOGDATEFMT='+%A, %B %d, %Y at %I:%M %p'
+EPOCHDATEFMT='+%s'
+TZ=America/Vancouver
+
+JPEGRE='jpe?g$'
+MDRE='.md$'
+
+SITEDIR=site
+BLOGDIR=blog
+SITEPATH=/srv/http/benjamincook.ca/$SITEDIR
+BLOGPATH=$SITEPATH/$BLOGDIR
+WEBPATH=/$BLOGDIR
+WEBLOGMD="weblog.md"
+
+MDINDENT="\t\t"
+
+datestat(){
+	date -d "$($STATCMD $1)" "${@:2}"
 }
-filedatepoch(){
-	TZ=America/Vancouver date -d "`stat -c %z $1`" "+%s"
+blogdate(){
+	datestat $1 "$BLOGDATEFMT" "${@:2}"
 }
-import(){
-	JPEG="jpe?g$"
+epochdate(){
+	datestat $1 "$EPOCHDATEFMT" "${@:2}"
+}
+import(){ # filename
 	echo "Importing $1..."
-	if [[ $1 =~ $JPEG ]] ; then
-		mv "$1" /srv/http/benjamincook.ca/site/blog/`./datepoch.sh "$1"`.jpeg
+	if [[ $1 =~ $JPEGRE ]] ; then
+		mv "$1" $BLOGPATH/$(epochdate "$1").jpeg
+	elif [[ $1 =~ $MDRE ]] ; then
+		mv "$1" $BLOGPATH/$(epochdate "$1").md
 	fi
-	./regen.sh
+	regen
 }
 regen(){
-	#!/usr/bin/env bash
-	SDIR=site
-	BDIR=blog
-	WDIR=/$BDIR
-	FDIR=$SDIR/$BDIR
-	JPEG=".jpeg$"
-	MD="weblog.md"
-	ls -ct1 $FDIR >cat
-	echo "# Web Log" >$MD
-	while read fn ; do
-		date=`./date.sh "$FDIR/$fn"`
+	echo "# Web Log" >$WEBLOGMD
+	for file in $(ls -t1 $SITEPATH) ; do
+		date=$(blogdate "$SITEPATH/$file")
 		echo "## $date "
-		if [[ "$fn" =~ $JPEG ]] ; then
-			echo "![$date]($WDIR/$fn)"
+		if [[ "$file" =~ $JPEGRE ]] ; then
+			echo "![$date]($WEBPATH/$file)"
+		elif [[ "$file" =~ $MDRE ]] ; then
+			markdown $SITEPATH/$file
 		fi
-	done <cat >>$MD
-	rm cat
+	done >>$WEBLOGMD
 	make
 }
-wget --post-data 'url=http://8chan.co/cuteboys' https://archive.today/submit/ -O test
+oldbuild(){
+	grep "^#[[:space:]]" $1 | sed 's/^#[[:space:]]//g' >title
+	sed -r "s~TITLE~`cat title`~g" $(HEAD) >head
+	markdown $1 |sed -r "s/^(.*)/\t\t\1/g" >_content
+	cat head _content $(FOOT) >$@
+	rm head title _content
+}
+title(){
+	if grep "^#[[:space:]]" $1 ; then
+		grep "^#[[:space:]]" $1 | head -1 | sed 's/^#[[:space:]]//g'
+	else
+		blogdate "$SITEPATH/$1"
+	fi
+}
+retitle(){
+	sed -r "s~TITLE~$(title $1|tr -d '\n')~g" $2 >>$3
+}
+mdindent(){
+	markdown $1 |sed -r "s/(.*)/$MDINDENT\1/g" >>$2
+}
+build(){
+	rm -f $1
+	retitle $2 $3 $1
+	mdindent $2 $1
+	retitle $2 $4 $1
+}
+
+eval "$@"
+#wget --post-data 'url=http://8chan.co/cuteboys' https://archive.today/submit/ -O test
